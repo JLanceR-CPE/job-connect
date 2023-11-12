@@ -14,7 +14,7 @@ const SignUpScreen = () => {
     // This is just a basic example, you should add proper validation and use a secure authentication method
 
     try {
-      if (name.trim() === '' || email.trim() === '' || password.trim() === '') {
+      if (username.trim() === '' || email.trim() === '' || password.trim() === '') {
         console.log('Invalid Input: Please fill in all fields.');
         return;
       }
