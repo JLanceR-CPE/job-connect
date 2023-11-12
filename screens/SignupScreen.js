@@ -5,7 +5,7 @@ import { db } from '../FirebaseConfig';
 import { addDoc, collection, doc, setDoc, getFirestore } from 'firebase/firestore';
 
 const SignUpScreen = () => {
-  const [name, setName] = useState('');
+  const [username, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -23,7 +23,7 @@ const SignUpScreen = () => {
 
       // Set the user data in the document
       addDoc(userRef, {
-        name: name,
+        username: username,
         email: email,
         password: password,
       });
@@ -42,8 +42,8 @@ const SignUpScreen = () => {
       <View>
         <TextInput
           style={styles.input}
-          placeholder="Name"
-          value={name}
+          placeholder="Userame"
+          value={username}
           onChangeText={(text) => setName(text)}
         />
         <TextInput
