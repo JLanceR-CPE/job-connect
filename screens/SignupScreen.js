@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, TextInput, Pressable, StyleSheet, Text } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { db } from '../FirebaseConfig';
 import { addDoc, collection, doc, setDoc, getFirestore } from 'firebase/firestore';
 
-const SignUpScreen = () => {
+const SignUpScreen = ({ navigation }) => {
   const [username, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
