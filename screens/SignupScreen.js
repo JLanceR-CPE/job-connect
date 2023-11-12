@@ -29,6 +29,7 @@ const SignUpScreen = () => {
       });
 
       console.log('Sign Up Successful: Welcome to the app!');
+      navigation.replace('Login');
     } catch (error) {
       console.error('Error during signup:', error.message);
     }
