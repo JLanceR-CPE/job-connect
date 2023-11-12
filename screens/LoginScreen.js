@@ -37,6 +37,10 @@ const LoginScreen = ({ navigation }) => {
     }
   };
 
+  const handleSignup = () => {
+    navigation.replace('Signup');
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
@@ -54,9 +58,13 @@ const LoginScreen = ({ navigation }) => {
           placeholder="Password"
           value={password}
           onChangeText={(text) => setPassword(text)}
+          secureTextEntry={true}
         />
         <Pressable title="Login" onPress={handleLogin} style={styles.login_button}>
           <Text style={styles.login_button_label}>Login</Text>
+        </Pressable>
+        <Pressable title="Signup" onPress={handleSignup} style={styles.signup_button}>
+          <Text style={styles.signup_button_label}>Signup</Text>
         </Pressable>
       </View>
     </View>
@@ -86,7 +94,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   login_button: {
-    
+    marginBottom: 16,
   },
   login_button_label: {
     fontWeight: 600,
@@ -95,6 +103,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     backgroundColor: '#FB6C00',
     color: 'white'
+  },
+  signup_button: {
+
+  },
+  signup_button_label: {
+    fontWeight: 600,
+    paddingVertical: 10, 
+    borderRadius: 12,
+    textAlign: 'center',
+    borderColor: '#FB6C00',
+    borderWidth: 2,
+    color: '#FB6C00'
   }
 });
 

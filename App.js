@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
+import SignUpScreen from './screens/SignupScreen';
 
 const Stack = createStackNavigator();
 
@@ -36,7 +37,12 @@ export default function App() {
           name="Home" 
           component={ HomeScreen } 
           options={{ headerShown: false }}
-          />
+        />
+        <Stack.Screen 
+          name="Signup" 
+          component={ SignUpScreen } 
+          options={{ headerShown: false }}
+        />
           
       </Stack.Navigator>
     </NavigationContainer>
