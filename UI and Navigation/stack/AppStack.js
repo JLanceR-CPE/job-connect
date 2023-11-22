@@ -15,7 +15,6 @@ const AppStack = () => {
             headerShown: false,
             tabBarShowLabel: false,
             tabBarStyle: { padding: 10, height: 60},
-            tabBarHideOnKeyboard: true
         }}>
         <Tab.Screen name='Home' component={JobStack}
             options={{
