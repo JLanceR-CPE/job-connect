@@ -3,6 +3,27 @@ import {KeyboardAvoidingView, Image, TouchableOpacity, SafeAreaView, StyleSheet,
 import Colors from '../components/Colors';
 
 export default function AddScreen() {
+
+  const [inputRequirements, setInputRequirements] = useState('')
+  const [inputDetails, setInputDetails] = useState('')
+  const [inputRequest, setInputRequest] = useState('')
+  
+  const clearAll = () => {
+    setInputRequirements('')
+    setInputDetails('')
+    setInputRequest('')
+  }
+
+  const handleChange = ({input,type}) => {
+    if (type === 'requirements'){
+      setInputRequirements(input)
+    } else if (type === 'details'){
+      setInputDetails(input)
+    } else if (type === 'request'){
+      setInputRequest(input)
+    }
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground style={styles.container} source={require('../assets/BG2.png')} resizeMode='stretch'>
@@ -13,7 +34,11 @@ export default function AddScreen() {
           </View>
 
           <View style={{...styles.inputContainer, flex: 1}}>
-            <TextInput selectionColor={Colors.text_color} multiline={true} style={styles.inputBox}/>
+            <TextInput selectionColor={Colors.text_color} 
+              multiline={true} style={styles.inputBox}
+              value={inputRequest} placeholder='Ex. Software Engineer'
+              placeholderTextColor={Colors.text_color}
+              onChangeText={(text)=> handleChange({input: text, type: 'request'})}/>
           </View>
 
           <View style={styles.textContainer}>
@@ -21,7 +46,11 @@ export default function AddScreen() {
           </View>
           
           <View style={{...styles.inputContainer, flex: 2}}>
-            <TextInput selectionColor={Colors.text_color} multiline={true} style={styles.inputBox}/>
+            <TextInput selectionColor={Colors.text_color} 
+              multiline={true} style={styles.inputBox}
+              value={inputDetails} placeholder='Ex. To Develop Software'
+              placeholderTextColor={Colors.text_color}
+              onChangeText={(text)=> handleChange({input: text, type: 'details'})}/>
           </View>
 
           <View style={styles.textContainer}>
@@ -29,12 +58,25 @@ export default function AddScreen() {
           </View>
 
           <View style={{...styles.inputContainer, flex: 3}}>
-            <TextInput selectionColor={Colors.text_color} multiline={true} style={styles.inputBox}/>
+            <TextInput selectionColor={Colors.text_color} 
+              multiline={true} style={styles.inputBox}
+              value={inputRequirements} placeholder='Ex. Bachelors Degree'
+              placeholderTextColor={Colors.text_color}
+              onChangeText={(text)=> handleChange({input: text, type: 'requirements'})}/>
           </View>
 
-          <TouchableOpacity style={styles.btn}>
-            <Text style={styles.textStyle}>Request</Text>
-          </TouchableOpacity>
+          <View style={{flexDirection: 'row', width: '90%', 
+                        alignSelf: 'center', gap: 20, justifyContent: 'space-evenly'}}>
+            <TouchableOpacity style={styles.btn}>
+              <Text style={styles.textStyle}>Request</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.btn} onPress={
+              () => clearAll()
+            }>
+              <Text style={styles.textStyle}>Clear</Text>
+            </TouchableOpacity>
+          </View>
         
         </View> 
 
@@ -61,14 +103,13 @@ const styles = StyleSheet.create({
     height: '100%',
     minHeight: '13%',
     color: Colors.text_color,
-    textAlignVertical: 'top',
   },
   btn:{
     backgroundColor: Colors.text_color,
     alignItems: 'center',
     padding: 15,
     borderRadius: 27,
-    width: '50%',
+    width: '45%',
     alignSelf: 'center',
     marginVertical: 20,
     elevation: 2,
