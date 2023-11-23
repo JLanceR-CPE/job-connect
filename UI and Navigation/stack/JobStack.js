@@ -7,7 +7,7 @@ const Stack = createStackNavigator()
 const JobStack = () => {
     return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name='HomeScreen' component={Screens.HomeScreen}/> 
+        <Stack.Screen name='Home' component={Screens.HomeScreen}/> 
         <Stack.Screen name='Job' component={Screens.JobScreen} />
     </Stack.Navigator>
     )

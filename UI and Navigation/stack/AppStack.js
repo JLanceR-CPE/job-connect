@@ -1,22 +1,22 @@
 import React from "react";
 import Screens from "../screens/Screens";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import JobStack from "./JobStack";
 import { View, Image, Text } from "react-native";
+import JobStack from "../stack/JobStack";
 
 const Tab = createBottomTabNavigator()
 
 const AppStack = () => {
     return (
     <Tab.Navigator 
-        initialRouteName = 'Home' 
-        backBehavior = 'history'
+        initialRouteName = 'JobStack' 
+        backBehavior ='history'
         screenOptions={{
             headerShown: false,
             tabBarShowLabel: false,
             tabBarStyle: { padding: 10, height: 60},
         }}>
-        <Tab.Screen name='Home' component={JobStack}
+        <Tab.Screen name='JobStack' component={JobStack}
             options={{
                 tabBarIcon: ({focused}) => (
                     <View style={{alignItems: 'center', justifyContent: 'center'}}>

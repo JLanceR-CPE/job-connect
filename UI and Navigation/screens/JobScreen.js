@@ -16,7 +16,7 @@ export default function JobScreen({route, navigation}) {
             <Pressable 
               style={{width: 30}}
               onPress={() => (
-              navigation.navigate('HomeScreen')
+              navigation.navigate('Home')
               )}>
               <Image source={require('../assets/Left_Arrow.png')}
               style={{height: 30, width:30}}
