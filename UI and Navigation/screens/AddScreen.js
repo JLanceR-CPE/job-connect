@@ -23,6 +23,11 @@ export default function AddScreen() {
       setInputRequest(input)
     }
   }
+  
+  const handleRequest = () => {
+    //Do request here
+    console.log('Request Pressed')
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -67,7 +72,7 @@ export default function AddScreen() {
 
           <View style={{flexDirection: 'row', width: '90%', 
                         alignSelf: 'center', gap: 20, justifyContent: 'space-evenly'}}>
-            <TouchableOpacity style={styles.btn}>
+            <TouchableOpacity style={styles.btn}onPress={()=>{handleRequest()}}>
               <Text style={styles.textStyle}>Request</Text>
             </TouchableOpacity>
 
