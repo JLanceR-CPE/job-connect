@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {KeyboardAvoidingView, Image, TouchableOpacity, SafeAreaView, StyleSheet, Text, View, ImageBackground, TextInput } from 'react-native';
+import {KeyboardAvoidingView, Image, Platform, TouchableOpacity, SafeAreaView, StyleSheet, Text, View, ImageBackground, TextInput, ScrollView } from 'react-native';
 import Colors from '../components/Colors';
 
 export default function AddScreen() {
@@ -33,7 +33,9 @@ export default function AddScreen() {
     <SafeAreaView style={styles.container}>
       <ImageBackground style={styles.container} source={require('../assets/BG2.png')} resizeMode='stretch'>
 
-        <View style={{flex: 1, paddingTop: 50}}>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : null} style={styles.container}>
+
+        <ScrollView style={{flex: 1, paddingTop: 50}} contentContainerStyle = {{flexGrow: 1}}>
           <View style={styles.textContainer}>
             <Text style={styles.textStyle}>Enter Your Job Request:</Text>
           </View>
@@ -82,9 +84,9 @@ export default function AddScreen() {
               <Text style={styles.textStyle}>Clear</Text>
             </TouchableOpacity>
           </View>
-        
-        </View> 
-
+          
+        </ScrollView> 
+      </KeyboardAvoidingView>
       </ImageBackground>
     </SafeAreaView>
   );

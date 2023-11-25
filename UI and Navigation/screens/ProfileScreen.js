@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {ScrollView, TouchableOpacity, StyleSheet, Text, View, ImageBackground, SafeAreaView, TextInput} from 'react-native';
+import {Platform ,KeyboardAvoidingView,ScrollView, TouchableOpacity, StyleSheet, Text, View, ImageBackground, SafeAreaView, TextInput} from 'react-native';
 import Colors from '../components/Colors';
 import {FontAwesome5} from '@expo/vector-icons';
 
@@ -41,8 +41,10 @@ export default function ProfileScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground style={styles.container} source={require('../assets/BG2.png')} resizeMode='stretch'>
-        <View style={{flex: 1, paddingTop: 50}}>
-          
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : null} style={styles.container}>
+        <ScrollView >
+          <View style={{flex: 1, paddingTop: 50}}>
+        
           <View style={{alignSelf: 'center'}}>
             <FontAwesome5 name='user-circle' size = {120} color = {Colors.white}/>
           </View>
@@ -54,7 +56,7 @@ export default function ProfileScreen() {
           <View style={{...styles.inputContainer, flex: 1}}>
             <TextInput selectionColor={Colors.text_color} 
               multiline={false} style={styles.inputBox}
-              value = {inputName} editable = {false}
+              value = {inputName} editable = {true}
               onChangeText={(text)=>handleChange({input: text, type: 'name'})}
             />
           </View>
@@ -66,7 +68,7 @@ export default function ProfileScreen() {
           <View style={{...styles.inputContainer, flex: 1}}>
             <TextInput selectionColor={Colors.text_color} 
               multiline={false} style={styles.inputBox}
-              value = {inputAge} editable = {false}
+              value = {inputAge} editable = {true}
               onChangeText={(text)=>handleChange({input: text, type: 'age'})}/>
           </View>
 
@@ -77,7 +79,7 @@ export default function ProfileScreen() {
           <View style={{...styles.inputContainer, flex: 1}}>
             <TextInput selectionColor={Colors.text_color} 
               multiline={false} style={styles.inputBox}
-              value = {inputContact} editable = {false}
+              value = {inputContact} editable = {true}
               onChangeText={(text)=>handleChange({input: text, type: 'contact'})}/>
           </View>
 
@@ -88,7 +90,7 @@ export default function ProfileScreen() {
           <View style={{...styles.inputContainer, flex: 1}}>
             <TextInput selectionColor={Colors.text_color} 
               multiline={false} style={styles.inputBox}
-              value = {inputEmail} editable = {false}
+              value = {inputEmail} editable = {true}
               onChangeText={(text)=>handleChange({input: text, type: 'email'})}/>
           </View>
 
@@ -99,7 +101,7 @@ export default function ProfileScreen() {
           <View style={{...styles.inputContainer, flex: 1}}>
             <TextInput selectionColor={Colors.text_color} 
               multiline={false} style={styles.inputBox}
-              value = {inputAddress} editable = {false}
+              value = {inputAddress} editable = {true}
               onChangeText={(text)=>handleChange({input: text, type: 'address'})}/>
           </View>
 
@@ -115,7 +117,9 @@ export default function ProfileScreen() {
           </View>
         
         </View> 
-
+        </ScrollView>
+        
+        </KeyboardAvoidingView>
       </ImageBackground>
     </SafeAreaView>
   );
