@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useLayoutEffect} from 'react';
+import React, {useState, useLayoutEffect} from 'react';
 import {Platform ,KeyboardAvoidingView,ScrollView, TouchableOpacity, StyleSheet, Text, View, ImageBackground, SafeAreaView, TextInput} from 'react-native';
 import Colors from '../components/Colors';
 import {FontAwesome5} from '@expo/vector-icons';
@@ -104,7 +104,7 @@ export default function ProfileScreen({navigation}) {
     } catch(error) {
       console.error('Error fetching data:', error);
     }
-    
+
     navigation.navigate('Auth')
   }
 
