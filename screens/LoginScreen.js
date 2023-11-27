@@ -2,7 +2,79 @@ import React, {useState} from 'react';
 import { StyleSheet, Text, View, ImageBackground, SafeAreaView, TextInput, TouchableOpacity, Pressable} from 'react-native';
 import Colors from '../components/Colors';
 
+import { showMessage, hideMessage } from "react-native-flash-message";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { db } from '../FirebaseConfig'; 
+import { getDocs, query, collection, where } from 'firebase/firestore';
+
+
 export default function LoginScreen({navigation}) {
+
+  const [inputUsername, setInputUsername] = useState('')
+  const [inputPassword, setInputPassword] = useState('')
+
+  const handleChange = ({input,type}) => {
+    if (type === 'username'){
+      setInputUsername(input)
+    } else if (type === 'password'){
+      setInputPassword(input)
+    } 
+  }
+
+  const handleLogin = async () => {
+    try {
+      const q = query(collection(db, 'users'), where('username', '==', inputUsername));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0];
+        const userData = userDoc.data();
+
+        if (userData.password === inputPassword) {
+          
+          await AsyncStorage.setItem('user-session', JSON.stringify({
+              "id": userDoc.id,
+              "username": userData.username,
+              "password": userData.password,
+              "name": userData.name,
+              "age": userData.age,
+              "contact": userData.contact,
+              "email": userData.email,
+              "address": userData.address
+            })
+          );
+          
+          navigation.replace('App');
+
+        } else {
+
+          showMessage({
+            message: "Invalid Credentials: Please check your username and password.",
+            type: "danger",
+          });
+
+        }
+      } else {
+        showMessage({
+          message: "User Not Found: Please check your username and try again.",
+          type: "danger",
+        });
+      }
+
+      // Congrats! You've just stored your first value!
+    } catch (error) {
+      showMessage({
+        message: error.message,
+        type: "danger",
+      });
+    }
+  };
+
+  const handleRegister = () => {
+    navigation.navigate('Register')
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground style={styles.imgBackground} source={require('../assets/BG.png')} resizeMode='stretch'>
@@ -15,13 +87,13 @@ export default function LoginScreen({navigation}) {
           </View>
 
           <View style={styles.inputBox}>
-            <TextInput placeholder='Email'/>
+            <TextInput placeholder='Username' onChangeText={(text)=> handleChange({input: text, type: 'username'})}/>
           </View>
           <View style={styles.inputBox}>
-            <TextInput placeholder='Password' secureTextEntry={true}/>
+            <TextInput placeholder='Password' secureTextEntry={true} onChangeText={(text)=> handleChange({input: text, type: 'password'})}/>
           </View>
 
-          <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('App')}>
+          <TouchableOpacity style={styles.btn} onPress={handleLogin}>
             <Text style={{fontWeight: 'bold', color: 'white'}}>Login</Text>
           </TouchableOpacity>
 
@@ -29,7 +101,7 @@ export default function LoginScreen({navigation}) {
 
         <View style={{flexDirection: 'row', marginTop: 10}}>
           <Text>Need an account? </Text>
-          <Pressable onPress={() => navigation.navigate('Register')}>
+          <Pressable onPress={handleRegister}>
             <Text style={{color: '#884AB2'}}>Signup here.</Text>
           </Pressable>
         </View>
