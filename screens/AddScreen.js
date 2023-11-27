@@ -93,16 +93,17 @@ export default function AddScreen() {
 
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : null} style={styles.container}>
 
-        <ScrollView style={{flex: 1, paddingTop: 50}} contentContainerStyle = {{flexGrow: 1}}>
+        <ScrollView style={{flex: 1}} contentContainerStyle = {{flexGrow: 1, paddingTop: 30}}>
           <View style={styles.textContainer}>
             <Text style={styles.textStyle}>Enter Your Job Request:</Text>
           </View>
 
           <View style={{...styles.inputContainer, flex: 1}}>
             <TextInput selectionColor={Colors.text_color} 
-              multiline={true} style={styles.inputBox}
+              multiline={false} style={{...styles.inputBox,}}
               value={inputRequest} placeholder='Ex. Software Engineer'
               placeholderTextColor={Colors.text_color}
+
               onChangeText={(text)=> handleChange({input: text, type: 'request'})}/>
           </View>
 
@@ -112,7 +113,7 @@ export default function AddScreen() {
           
           <View style={{...styles.inputContainer, flex: 1}}>
             <TextInput selectionColor={Colors.text_color} 
-              multiline={true} style={styles.inputBox}
+              multiline={false} style={{...styles.inputBox,}}
               value={inputPriceStart} placeholder='Ex. 10000'
               placeholderTextColor={Colors.text_color}
               onChangeText={(text)=> handleChange({input: text, type: 'price-start'})}/>
@@ -124,8 +125,8 @@ export default function AddScreen() {
           
           <View style={{...styles.inputContainer, flex: 1}}>
             <TextInput selectionColor={Colors.text_color} 
-              multiline={true} style={styles.inputBox}
-              value={inputPriceEnd} placeholder='Ex. To Develop Software'
+              multiline={false} style={{...styles.inputBox,}}
+              value={inputPriceEnd} placeholder='Ex. 10000'
               placeholderTextColor={Colors.text_color}
               onChangeText={(text)=> handleChange({input: text, type: 'price-end'})}/>
           </View>
@@ -136,7 +137,7 @@ export default function AddScreen() {
           
           <View style={{...styles.inputContainer, flex: 1}}>
             <TextInput selectionColor={Colors.text_color} 
-              multiline={true} style={styles.inputBox}
+              multiline={true} style={{...styles.inputBox,}}
               value={inputLocation} placeholder='Ex. Quezon City'
               placeholderTextColor={Colors.text_color}
               onChangeText={(text)=> handleChange({input: text, type: 'location'})}/>
@@ -146,9 +147,9 @@ export default function AddScreen() {
             <Text style={styles.textStyle}>Enter The Job Details:</Text>
           </View>
           
-          <View style={{...styles.inputContainer, flex: 3}}>
+          <View style={{...styles.inputContainer, flex: 1}}>
             <TextInput selectionColor={Colors.text_color} 
-              multiline={true} style={styles.inputBox}
+              multiline={true} style={{...styles.inputBox,}}
               value={inputDetails} placeholder='Ex. To Develop Software'
               placeholderTextColor={Colors.text_color}
               onChangeText={(text)=> handleChange({input: text, type: 'details'})}/>
@@ -158,9 +159,9 @@ export default function AddScreen() {
             <Text style={styles.textStyle}>Enter The Job Requirement/s:</Text>
           </View>
 
-          <View style={{...styles.inputContainer, flex: 5}}>
+          <View style={{...styles.inputContainer, flex: 1}}>
             <TextInput selectionColor={Colors.text_color} 
-              multiline={true} style={styles.inputBox}
+              multiline={true} style={{...styles.inputBox,}}
               value={inputRequirements} placeholder='Ex. Bachelors Degree'
               placeholderTextColor={Colors.text_color}
               onChangeText={(text)=> handleChange({input: text, type: 'requirements'})}/>
@@ -198,7 +199,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
-    paddingTop: 15,
+    minHeight: 50
   },
   inputBox: {
     width: '100%',
