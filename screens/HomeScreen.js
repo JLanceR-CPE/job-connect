@@ -27,8 +27,6 @@ export default function HomeScreen({navigation}) {
           }));
 
           setJobRequests(documents);
-          
-          console.log(documents)
 
         } catch (error) {
           console.error('Error fetching data:', error);
