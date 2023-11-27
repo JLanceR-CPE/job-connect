@@ -2,6 +2,11 @@ import React, {useState} from 'react';
 import {Platform, StyleSheet, Text, View, ImageBackground, SafeAreaView, TextInput, TouchableOpacity, Pressable, KeyboardAvoidingView, ScrollView} from 'react-native';
 import Colors from '../components/Colors';
 
+import { showMessage, hideMessage } from "react-native-flash-message";
+
+import { db } from '../FirebaseConfig'; 
+import { addDoc, collection } from 'firebase/firestore';
+
 export default function Register({navigation}) {
 
   const [inputUsername, setInputUsername] = useState('')
@@ -33,6 +38,57 @@ export default function Register({navigation}) {
     } 
   }
 
+  const handleSignup = () => {
+    try {
+      if (inputUsername.trim() === '' || inputEmail.trim() === '' || inputPassword.trim() === '' || inputConfirmPassword.trim() === '' ||
+          inputName.trim() === '' || inputAge.trim() === '' || inputContact.trim() === '' || inputAddress.trim() === '') {
+          
+        showMessage({
+          message: "Invalid Input: Please fill in all fields.",
+          type: "danger",
+        });
+
+        return;
+      }
+
+      if (inputPassword.trim() !== inputConfirmPassword.trim() ) {
+
+        showMessage({
+          message: "Invalid Input: Password does not match!",
+          type: "danger",
+        });
+
+        return;
+      }
+
+      const userRef = collection(db, 'users');
+
+      // Set the user data in the document
+      addDoc(userRef, {
+        "username": inputUsername,
+        "password": inputPassword,
+        "name": inputName,
+        "age": Number(inputAge),
+        "contact": inputContact,
+        "email": inputEmail,
+        "address": inputAddress
+      });
+
+      showMessage({
+        message: "Successfully Created New Account",
+        type: "success",
+      });
+
+      navigation.replace('Login');
+
+    } catch (error) {
+      showMessage({
+        message: error.message,
+        type: "danger",
+      });
+    }
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground style={styles.imgBackground} source={require('../assets/BG.png')} resizeMode='stretch'>
@@ -47,10 +103,10 @@ export default function Register({navigation}) {
                  <TextInput placeholder='Username' value = {inputUsername} onChangeText={(text)=>handleChange({input: text, type: 'username'})} />
              </View>
              <View style={styles.inputBox}>
-                 <TextInput placeholder='Password' value = {inputPassword} onChangeText={(text)=>handleChange({input: text, type: 'password'})} />
+                 <TextInput placeholder='Password' secureTextEntry={true} value = {inputPassword} onChangeText={(text)=>handleChange({input: text, type: 'password'})} />
              </View>
              <View style={styles.inputBox}>
-                 <TextInput placeholder='Confirm Password' value = {inputConfirmPassword} onChangeText={(text)=>handleChange({input: text, type: 'confirm-password'})} />
+                 <TextInput placeholder='Confirm Password' secureTextEntry={true} value = {inputConfirmPassword} onChangeText={(text)=>handleChange({input: text, type: 'confirm-password'})} />
              </View>
              <View style={styles.inputBox}>
                  <TextInput placeholder='Name' value = {inputName} onChangeText={(text)=>handleChange({input: text, type: 'name'})} />
@@ -67,8 +123,8 @@ export default function Register({navigation}) {
              <View style={styles.inputBox}>
                  <TextInput placeholder='Address' value = {inputAddress} onChangeText={(text)=>handleChange({input: text, type: 'address'})} />
              </View>
-             <TouchableOpacity style={styles.btn}>
-               <Text style={{fontWeight: 'bold', color: 'white'}}>Signup</Text>
+             <TouchableOpacity style={styles.btn} onPress={handleSignup}>
+               <Text style={{fontWeight: 'bold', color: 'white'} }>Signup</Text>
              </TouchableOpacity>
             </ScrollView>
         </View>
