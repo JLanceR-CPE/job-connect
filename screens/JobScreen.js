@@ -3,11 +3,10 @@ import { SafeAreaView, StyleSheet, Text, View, ImageBackground, ScrollView, Imag
 import Colors from '../components/Colors';
 
 export default function JobScreen({route, navigation}) {
-  const { job_title,
-          location,
-          rate,
-          job_details,
-          job_requirements, } = route.params;
+
+  const jobRequest = route.params.data
+
+
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground style={styles.imgBackground} source={require('../assets/BG2.png')} resizeMode='stretch'>
@@ -27,17 +26,17 @@ export default function JobScreen({route, navigation}) {
               <Text style={{
                 color: Colors.text_color, fontSize: 25, textAlign: 'center'
                 }}>
-                {job_title}
+                {jobRequest['job-request']}
               </Text>
 
               <View style={{
                 backgroundColor:Colors.text_color, height: 2, marginVertical: 15
               }}></View>
 
-              <Text style={styles.spacer}><Text style={{fontWeight: 'bold', fontSize: 17}}>Location: </Text>{location}</Text>
-              <Text style={styles.spacer}><Text style={{fontWeight: 'bold', fontSize: 17}}>Rate: </Text>{rate}</Text>
-              <Text style={styles.spacer}><Text style={{fontWeight: 'bold', fontSize: 17}}>Job Desription: </Text>{'\n'}{job_details}</Text>
-              <Text style={styles.spacer}><Text style={{fontWeight: 'bold', fontSize: 17}}>Job Requirements: </Text>{'\n'}{job_requirements}</Text>
+              <Text style={styles.spacer}><Text style={{fontWeight: 'bold', fontSize: 17}}>Location: </Text>{jobRequest['job-location']}</Text>
+              <Text style={styles.spacer}><Text style={{fontWeight: 'bold', fontSize: 17}}>Rate: </Text>{jobRequest['job-price-start']} - {jobRequest['job-price-end']}</Text>
+              <Text style={styles.spacer}><Text style={{fontWeight: 'bold', fontSize: 17}}>Job Desription: </Text>{'\n'}{jobRequest['job-details']}</Text>
+              <Text style={styles.spacer}><Text style={{fontWeight: 'bold', fontSize: 17}}>Job Requirements: </Text>{'\n'}{jobRequest['job-requirements']}</Text>
 
           </ScrollView>
         </View>

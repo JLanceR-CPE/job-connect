@@ -3,15 +3,50 @@ import { FlatList, SafeAreaView, StyleSheet, Text, Pressable, View, ImageBackgro
 import { Jobs } from '../assets/Jobs';
 import Colors from '../components/Colors'
 
+import { useFocusEffect } from '@react-navigation/native';
+
+import { db } from '../FirebaseConfig'; 
+import { getDocs, query, collection, where } from 'firebase/firestore';
+
+
 
 export default function HomeScreen({navigation}) {
+
+  const [jobRequests, setJobRequests] = useState({});
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchData = async () => {
+        try {
+          // Your asynchronous code goes here
+          const querySnapshot = await getDocs(collection(db, "job-requests"));
+          
+          const documents = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            data: doc.data(),
+          }));
+
+          setJobRequests(documents);
+          
+          console.log(documents)
+
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+
+      fetchData();
+
+    }, [])
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground style={styles.imgBackground} source={require('../assets/BG2.png')} resizeMode='stretch'>
         <FlatList 
           style={styles.scroll}
           showsVerticalScrollIndicator={false}
-          data={Jobs}
+          data={jobRequests}
           renderItem={
             ({item}) => (
               <Pressable style={styles.rowLayout} onPress={()=>{
@@ -37,7 +72,7 @@ export default function HomeScreen({navigation}) {
                     <Text numberOfLines={1} ellipsizeMode="tail" style={{
                       fontSize: 14, color: 'rgba(251,108,0,0.80)'
                     }}>
-                      {item.location}
+                      {item.data['job-location']}
                     </Text>
 
                   </View>
@@ -49,11 +84,11 @@ export default function HomeScreen({navigation}) {
                     }}>
                     
                     <View>
-                      <Text numberOfLines={1} ellipsizeMode="tail" style={{fontSize: 20, color: 'rgba(251,108,0,1)'}}>
-                        {item.job_title}
+                      <Text numberOfLines={1} ellipsizeMode="tail" style={{fontSize: 20, color: 'rgba(251,108,0,1)', paddingTop: 3}}>
+                        {item.data['job-request']}
                       </Text>
-                      <Text numberOfLines={1} ellipsizeMode="tail" style={{fontSize: 14, color: 'rgba(251,108,0,0.5)'}}>
-                        Rate: {item.rate}
+                      <Text numberOfLines={1} ellipsizeMode="tail" style={{fontSize: 14, color: 'rgba(251,108,0,0.5)', paddingTop: 3}}>
+                        Rate: {item.data['job-price-start']} - {item.data['job-price-end']}
                       </Text>
                     </View>
 
