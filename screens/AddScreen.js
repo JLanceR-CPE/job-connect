@@ -2,31 +2,89 @@ import React, {useState} from 'react';
 import {KeyboardAvoidingView, Image, Platform, TouchableOpacity, SafeAreaView, StyleSheet, Text, View, ImageBackground, TextInput, ScrollView } from 'react-native';
 import Colors from '../components/Colors';
 
+import { showMessage, hideMessage } from "react-native-flash-message";
+
+import { db } from '../FirebaseConfig';
+import { addDoc, collection, doc, setDoc, getFirestore } from 'firebase/firestore';
+
 export default function AddScreen() {
 
-  const [inputRequirements, setInputRequirements] = useState('')
-  const [inputDetails, setInputDetails] = useState('')
   const [inputRequest, setInputRequest] = useState('')
+  const [inputDetails, setInputDetails] = useState('')
+  const [inputPriceStart, setInputPriceStart] = useState('')
+  const [inputPriceEnd, setInputPriceEnd] = useState('')
+  const [inputLocation, setInputLocation] = useState('')
+  const [inputRequirements, setInputRequirements] = useState('')
   
   const clearAll = () => {
-    setInputRequirements('')
-    setInputDetails('')
     setInputRequest('')
+    setInputPriceStart('')
+    setInputPriceEnd('')
+    setInputLocation('')
+    setInputDetails('')
+    setInputRequirements('')
   }
 
   const handleChange = ({input,type}) => {
-    if (type === 'requirements'){
-      setInputRequirements(input)
+    if (type === 'request'){
+      setInputRequest(input)
+    } else if (type === 'price-start'){
+      setInputPriceStart(input)
+    } else if (type === 'price-end'){
+      setInputPriceEnd(input)
+    } else if (type === 'location'){
+      setInputLocation(input)
     } else if (type === 'details'){
       setInputDetails(input)
-    } else if (type === 'request'){
-      setInputRequest(input)
+    } else if (type === 'requirements'){
+      setInputRequirements(input)
     }
   }
   
   const handleRequest = () => {
-    //Do request here
-    console.log('Request Pressed')
+    try {
+      if (inputRequest.trim() === '' || 
+          inputPriceStart.trim() === '' ||
+          inputPriceEnd.trim() === '' || 
+          inputLocation.trim() === '' || 
+          inputDetails.trim() === '' || 
+          inputRequirements.trim() === '') 
+          {
+
+            showMessage({
+              message: "Invalid Input: Please fill in all fields.",
+              type: "danger",
+            });
+        return;
+      }
+
+      const requestRef = collection(db, 'job-requests');
+
+      addDoc(requestRef, {
+        "job-request": inputRequest,
+        "job-price-start": inputPriceStart,
+        "job-price-end": inputPriceEnd,
+        "job-location": inputLocation,
+        "job-details": inputDetails,
+        "job-requirements": inputRequirements
+      });
+    
+
+      showMessage({
+        message: "Clicked",
+        type: "success",
+      });
+      
+      clearAll();
+
+    } catch (error) {
+      showMessage({
+        message: error.message,
+        type: "danger",
+      });
+    }
+
+    
   }
 
   return (
@@ -49,10 +107,46 @@ export default function AddScreen() {
           </View>
 
           <View style={styles.textContainer}>
+            <Text style={styles.textStyle}>Enter The Job Compensation Range (Start):</Text>
+          </View>
+          
+          <View style={{...styles.inputContainer, flex: 1}}>
+            <TextInput selectionColor={Colors.text_color} 
+              multiline={true} style={styles.inputBox}
+              value={inputPriceStart} placeholder='Ex. 10000'
+              placeholderTextColor={Colors.text_color}
+              onChangeText={(text)=> handleChange({input: text, type: 'price-start'})}/>
+          </View>
+
+          <View style={styles.textContainer}>
+            <Text style={styles.textStyle}>Enter The Job Compensation Range (End):</Text>
+          </View>
+          
+          <View style={{...styles.inputContainer, flex: 1}}>
+            <TextInput selectionColor={Colors.text_color} 
+              multiline={true} style={styles.inputBox}
+              value={inputPriceEnd} placeholder='Ex. To Develop Software'
+              placeholderTextColor={Colors.text_color}
+              onChangeText={(text)=> handleChange({input: text, type: 'price-end'})}/>
+          </View>
+
+          <View style={styles.textContainer}>
+            <Text style={styles.textStyle}>Enter The Job Location:</Text>
+          </View>
+          
+          <View style={{...styles.inputContainer, flex: 1}}>
+            <TextInput selectionColor={Colors.text_color} 
+              multiline={true} style={styles.inputBox}
+              value={inputLocation} placeholder='Ex. Quezon City'
+              placeholderTextColor={Colors.text_color}
+              onChangeText={(text)=> handleChange({input: text, type: 'location'})}/>
+          </View>
+
+          <View style={styles.textContainer}>
             <Text style={styles.textStyle}>Enter The Job Details:</Text>
           </View>
           
-          <View style={{...styles.inputContainer, flex: 2}}>
+          <View style={{...styles.inputContainer, flex: 3}}>
             <TextInput selectionColor={Colors.text_color} 
               multiline={true} style={styles.inputBox}
               value={inputDetails} placeholder='Ex. To Develop Software'
@@ -64,7 +158,7 @@ export default function AddScreen() {
             <Text style={styles.textStyle}>Enter The Job Requirement/s:</Text>
           </View>
 
-          <View style={{...styles.inputContainer, flex: 3}}>
+          <View style={{...styles.inputContainer, flex: 5}}>
             <TextInput selectionColor={Colors.text_color} 
               multiline={true} style={styles.inputBox}
               value={inputRequirements} placeholder='Ex. Bachelors Degree'
@@ -74,7 +168,7 @@ export default function AddScreen() {
 
           <View style={{flexDirection: 'row', width: '90%', 
                         alignSelf: 'center', gap: 20, justifyContent: 'space-evenly'}}>
-            <TouchableOpacity style={styles.btn}onPress={()=>{handleRequest()}}>
+            <TouchableOpacity style={styles.btn}onPress={handleRequest}>
               <Text style={styles.textStyle}>Request</Text>
             </TouchableOpacity>
 
@@ -103,12 +197,13 @@ const styles = StyleSheet.create({
     width: '90%',
     alignSelf: 'center',
     justifyContent: 'center',
-    padding: 15,
+    paddingHorizontal: 20,
+    paddingTop: 15,
   },
   inputBox: {
     width: '100%',
     height: '100%',
-    minHeight: '13%',
+    minHeight: '8%',
     color: Colors.text_color,
   },
   btn:{
@@ -122,7 +217,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   textContainer: {
-    width: '87%',
+    width: '85%',
     alignSelf: 'center',
     paddingVertical: 3
   },
