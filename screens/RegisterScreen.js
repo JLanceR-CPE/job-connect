@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, ImageBackground, SafeAreaView, TextInput, TouchableOpacity, Pressable, KeyboardAvoidingView, ScrollView} from 'react-native';
+import {Platform, StyleSheet, Text, View, ImageBackground, SafeAreaView, TextInput, TouchableOpacity, Pressable, KeyboardAvoidingView, ScrollView} from 'react-native';
 import Colors from '../components/Colors';
 
 export default function Register({navigation}) {
@@ -36,55 +36,51 @@ export default function Register({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground style={styles.imgBackground} source={require('../assets/BG.png')} resizeMode='stretch'>
-        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : null} style={{flex: 1, justifyContent: 'center'}}>
-          <ScrollView style={{width: '100%'}}>
-            <View style={styles.card}>
-
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : null} style={{width: '100%'}}>
+          <View style={styles.card}>
+            <ScrollView>
               <View style={styles.headerView}>
-                <Text style={styles.headerText}>Welcome!</Text>
-                <Text>Signup to create your account.</Text>
-              </View>
-
-              <View style={styles.inputBox}>
-                <TextInput placeholder='Username' value = {inputUsername} onChangeText={(text)=>handleChange({input: text, type: 'username'})} />
-              </View>
-              <View style={styles.inputBox}>
-                <TextInput placeholder='Password' value = {inputPassword} onChangeText={(text)=>handleChange({input: text, type: 'password'})} />
-              </View>
-              <View style={styles.inputBox}>
-                <TextInput placeholder='Confirm Password' value = {inputConfirmPassword} onChangeText={(text)=>handleChange({input: text, type: 'confirm-password'})} />
-              </View>
-              <View style={styles.inputBox}>
-                <TextInput placeholder='Name' value = {inputName} onChangeText={(text)=>handleChange({input: text, type: 'name'})} />
-              </View>
-              <View style={styles.inputBox}>
-                <TextInput placeholder='Age' value = {inputAge} onChangeText={(text)=>handleChange({input: text, type: 'age'})} />
-              </View>
-              <View style={styles.inputBox}>
-                <TextInput placeholder='Contact' value = {inputContact} onChangeText={(text)=>handleChange({input: text, type: 'contact'})} />
-              </View>
-              <View style={styles.inputBox}>
-                <TextInput placeholder='Email' value = {inputEmail} onChangeText={(text)=>handleChange({input: text, type: 'email'})} />
-              </View>
-              <View style={styles.inputBox}>
-                <TextInput placeholder='Address' value = {inputAddress} onChangeText={(text)=>handleChange({input: text, type: 'address'})} />
-              </View>
-
-
-              <TouchableOpacity style={styles.btn}>
-                <Text style={{fontWeight: 'bold', color: 'white'}}>Signup</Text>
-              </TouchableOpacity>
-
-            </View>
-
-            <View style={{flexDirection: 'row', marginTop: 10,}}>
-              <Text>Already have an account? </Text>
-              <Pressable onPress={() => navigation.navigate('Login')}>
-                <Text style={{color: '#884AB2'}}>Login instead.</Text>
-              </Pressable>
-            </View>
-        </ScrollView>
-        </KeyboardAvoidingView>
+                 <Text style={styles.headerText}>Welcome!</Text>
+                 <Text>Signup to create your account.</Text>
+             </View>
+             <View style={styles.inputBox}>
+                 <TextInput placeholder='Username' value = {inputUsername} onChangeText={(text)=>handleChange({input: text, type: 'username'})} />
+             </View>
+             <View style={styles.inputBox}>
+                 <TextInput placeholder='Password' value = {inputPassword} onChangeText={(text)=>handleChange({input: text, type: 'password'})} />
+             </View>
+             <View style={styles.inputBox}>
+                 <TextInput placeholder='Confirm Password' value = {inputConfirmPassword} onChangeText={(text)=>handleChange({input: text, type: 'confirm-password'})} />
+             </View>
+             <View style={styles.inputBox}>
+                 <TextInput placeholder='Name' value = {inputName} onChangeText={(text)=>handleChange({input: text, type: 'name'})} />
+             </View>
+             <View style={styles.inputBox}>
+                 <TextInput placeholder='Age' value = {inputAge} onChangeText={(text)=>handleChange({input: text, type: 'age'})} />
+             </View>
+             <View style={styles.inputBox}>
+                 <TextInput placeholder='Contact' value = {inputContact} onChangeText={(text)=>handleChange({input: text, type: 'contact'})} />
+             </View>
+             <View style={styles.inputBox}>
+                 <TextInput placeholder='Email' value = {inputEmail} onChangeText={(text)=>handleChange({input: text, type: 'email'})} />
+             </View>
+             <View style={styles.inputBox}>
+                 <TextInput placeholder='Address' value = {inputAddress} onChangeText={(text)=>handleChange({input: text, type: 'address'})} />
+             </View>
+             <TouchableOpacity style={styles.btn}>
+               <Text style={{fontWeight: 'bold', color: 'white'}}>Signup</Text>
+             </TouchableOpacity>
+            </ScrollView>
+        </View>
+      
+        
+        <View style={{flexDirection: 'row', marginTop: 10, alignSelf: 'center'}}>
+          <Text>Already have an account? </Text>
+            <Pressable onPress={() => navigation.navigate('Login')}>
+              <Text style={{color: '#884AB2'}}>Login instead.</Text>
+            </Pressable>
+         </View>
+      </KeyboardAvoidingView>
       </ImageBackground>
     </SafeAreaView>
   );
@@ -93,6 +89,8 @@ export default function Register({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignContent: 'center'
   },
   imgBackground: {
     flex: 1,
@@ -122,9 +120,10 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
   card: {
-    width: '100%',
+    width: '85%',
     backgroundColor: 'rgba(255,255,255,0.78)',
     borderRadius: 20,
+    alignSelf: 'center'
   },
   btn: {
     //backgroundColor: 'tomato',
