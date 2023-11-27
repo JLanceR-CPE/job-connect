@@ -1,102 +1,115 @@
-import React from 'react';
-import { View, Text, Button, StyleSheet, ScrollView, Pressable } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { JobItem } from '../components/JobItem'
+import React, {useState} from 'react';
+import { FlatList, SafeAreaView, StyleSheet, Text, Pressable, View, ImageBackground, Image} from 'react-native';
+import { Jobs } from '../assets/Jobs';
+import Colors from '../components/Colors'
 
-const HomeScreen = ({ navigation }) => {
-  const handleLogout = async () => {
-    console.log('Logging out...')
-    await AsyncStorage.removeItem('isLoggedIn');
-    navigation.replace('Login');
-    console.log('Logged out succesfully!')
-  };
 
+export default function HomeScreen({navigation}) {
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.listings}>
-  
-        <View style={styles.job_listing}>
-          <View style={styles.location}>
-            <Icon name="location-on" color={'#FB6C00'} size={24}></Icon>
-            <Text>Quezon City</Text>
-          </View>
-          <View>
-            <Text style={styles.job_title}>Helper</Text>
-            <Text style={styles.job_rate}>Rate: 10,000 - 20,000 PHP</Text>
-          </View>
-        </View>
+    <SafeAreaView style={styles.container}>
+      <ImageBackground style={styles.imgBackground} source={require('../assets/BG2.png')} resizeMode='stretch'>
+        <FlatList 
+          style={styles.scroll}
+          showsVerticalScrollIndicator={false}
+          data={Jobs}
+          renderItem={
+            ({item}) => (
+              <Pressable style={styles.rowLayout} onPress={()=>{
+                navigation.navigate('Job', item)
+              }}>
+                <View style={styles.rowHeader}></View>
+                <View style={styles.rowBody}>
+                  <View style={{
+                    flexDirection: 'row', 
+                    paddingStart: 15, 
+                    paddingTop: 7, 
+                    gap: 2,
+                    }}>
 
-        <View style={styles.job_listing}>
-          <View style={styles.location}>
-            <Icon name="location-on" color={'#FB6C00'} size={24}></Icon>
-            <Text>Quezon City</Text>
-          </View>
-          <View>
-            <Text style={styles.job_title}>Dish Washer</Text>
-            <Text style={styles.job_rate}>Rate: 10,000 - 15,000 PHP</Text>
-          </View>
-        </View>
+                    <Image 
+                    source={require('../assets/Location.png')} 
+                    resizeMode='contain' style={{
+                      height: 23,
+                      width: 23
+                    }}
+                    />
 
-        <View style={styles.job_listing}>
-          <View style={styles.location}>
-            <Icon name="location-on" color={'#FB6C00'} size={24}></Icon>
-            <Text>Quezon City</Text>
-          </View>
-          <View>
-            <Text style={styles.job_title}>Rider</Text>
-            <Text style={styles.job_rate}>Rate: 20,000 - 30,000 PHP</Text>
-          </View>
-        </View>
+                    <Text numberOfLines={1} ellipsizeMode="tail" style={{
+                      fontSize: 14, color: 'rgba(251,108,0,0.80)'
+                    }}>
+                      {item.location}
+                    </Text>
 
-      </ScrollView>
-      <Pressable onPress={handleLogout} style={styles.logout_button}>
-        <Text style={styles.logout_button_label}>Logout</Text>
-      </Pressable>
-    </View>
+                  </View>
+                  <View style={{
+                    flexDirection: 'row', 
+                    justifyContent: 'space-between',
+                    paddingHorizontal: 20,
+                    paddingBottom: 15
+                    }}>
+                    
+                    <View>
+                      <Text numberOfLines={1} ellipsizeMode="tail" style={{fontSize: 20, color: 'rgba(251,108,0,1)'}}>
+                        {item.job_title}
+                      </Text>
+                      <Text numberOfLines={1} ellipsizeMode="tail" style={{fontSize: 14, color: 'rgba(251,108,0,0.5)'}}>
+                        Rate: {item.rate}
+                      </Text>
+                    </View>
+
+                    <Image 
+                    source={require('../assets/Next_page.png')} 
+                    resizeMode='contain' style={{
+                      height: 35,
+                      width: 35
+                    }}
+                    />
+
+                  </View>
+
+                </View>
+              </Pressable>
+            )
+          }
+        />
+      </ImageBackground>
+    </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
-    backgroundColor: '#FFBB5C'
   },
-  listings: {
-    width: '80%',
-  },
-  job_listing: {
+  imgBackground: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
-    opacity: '60%',
+  },
+  rowLayout: {
+    backgroundColor: Colors.white,
+    marginBottom: 15,
     width: '100%',
-    borderRadius: 12,
-    padding: 10,
-    marginBottom: 10,
+    alignSelf: 'center',
+    borderRadius: 10,
+    height: 100
   },
-  job_title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FB6C00',
+  scroll: {
+    backgroundColor: 'rgba(255,255,255,0.5)',
+    borderRadius: 20,
+    padding: 15,
+    margin: 15,
+    marginTop: 40
   },
-  location: {
-    flexDirection: 'row',
-    alignItems: 'center'
+  rowHeader: {
+    backgroundColor: Colors.card_header,
+    flex: 1,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10
   },
-  logout_button: {
-    width: '100%'
-  },
-  logout_button_label: {
-    fontWeight: 600,
-    paddingVertical: 10, 
-    borderRadius: 12,
-    textAlign: 'center',
-    backgroundColor: '#FB6C00',
-    color: 'white'
-  },
-});
+  rowBody: {
+    backgroundColor: Colors.white,
+    flex: 9,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10
+  }
 
-export default HomeScreen;
+});

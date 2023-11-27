@@ -1,49 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native'; 
+import React, {useState} from 'react';
+import { StyleSheet, } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import LoginScreen from './screens/LoginScreen';
-import HomeScreen from './screens/HomeScreen';
-import SignUpScreen from './screens/SignupScreen';
+import AuthStack from './stack/AuthStack.js';
+import AppStack from './stack/AppStack.js';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator()
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(null);
-
-  useEffect(() => {
-    checkLoginStatus();
-  }, []);
-
-  const checkLoginStatus = async () => {
-    const value = await AsyncStorage.getItem('isLoggedIn');
-    setIsLoggedIn(value === 'true');
-  };
-
-  if (isLoggedIn === null) {
-    return null; // You can show a loading indicator here
-  }
-
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Login"
-          component={ LoginScreen }
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen 
-          name="Home" 
-          component={ HomeScreen } 
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen 
-          name="Signup" 
-          component={ SignUpScreen } 
-          options={{ headerShown: false }}
-        />
-          
+      <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Screen name="Auth" component={AuthStack} />
+        <Stack.Screen name="App" component={AppStack} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -52,7 +21,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
