@@ -1,16 +1,25 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback, useLayoutEffect} from 'react';
 import {Platform ,KeyboardAvoidingView,ScrollView, TouchableOpacity, StyleSheet, Text, View, ImageBackground, SafeAreaView, TextInput} from 'react-native';
 import Colors from '../components/Colors';
 import {FontAwesome5} from '@expo/vector-icons';
 
+import { useFocusEffect } from '@react-navigation/native';
+import { showMessage, hideMessage } from "react-native-flash-message";
 
-export default function ProfileScreen() {
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-  const [inputName, setInputName] = useState('Juan Dela Cruz');
-  const [inputAge, setInputAge] = useState('25');
-  const [inputEmail, setInputEmail] = useState('JuanDelaCruz@sample.com');
-  const [inputContact, setInputContact] = useState('09123456789');
-  const [inputAddress, setInputAddress] = useState('Caloocan City');
+import { db } from '../FirebaseConfig'; 
+import { setDoc, doc } from 'firebase/firestore';
+
+export default function ProfileScreen({navigation}) {
+
+  const [inputName, setInputName] = useState('');
+  const [inputAge, setInputAge] = useState('');
+  const [inputEmail, setInputEmail] = useState('');
+  const [inputContact, setInputContact] = useState('');
+  const [inputAddress, setInputAddress] = useState('');
+
+  const [isTextBoxEnabled, setIsTextBoxEnabled] = useState(false);
 
   const handleChange = ({input,type}) => {
     if (type === 'name'){
@@ -25,17 +34,78 @@ export default function ProfileScreen() {
       setInputAddress(input)
     }
   }
+  
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchData = async () => {
+        try {
+          // Your asynchronous code goes here
+          const user = await AsyncStorage.getItem('user-session');
+          const userData = JSON.parse(user);
+          if (userData !== null){
+            if ( inputName === '' || inputAge === '' || inputContact === '' || inputEmail === '' || inputAddress === '') {
+              setInputName(userData.name)
+              setInputAge(String(userData.age))
+              setInputContact(userData.contact)
+              setInputEmail(userData.email)
+              setInputAddress(userData.address)
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
 
-  const EnableEdit = () => {
-    // Turn editable on for every text input
-    // Hide Edit Profile and Logout buttons
-    // and replace with Save or Cancel button
-    console.log('EnableEdit pressed')
+      fetchData();
+
+    }, [])
+  );
+
+  const handleEdit = () => {
+    if (!isTextBoxEnabled) {
+
+      setIsTextBoxEnabled(true);
+
+    } else {
+      
+      const setAccountInfo = async () => {
+        try {
+          // Your asynchronous code goes here
+          const user = await AsyncStorage.getItem('user-session');
+          const userData = JSON.parse(user);
+          console.log(userData)
+          if (userData !== null){
+            await setDoc(doc(db, "users", userData.id), {
+              "username": userData.username,
+              "password": userData.password,
+              "name": inputName,
+              "age": Number(inputAge),
+              "contact": inputContact,
+              "email": inputEmail,
+              "address": inputAddress
+            });
+          }
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+
+      setAccountInfo();
+
+      setIsTextBoxEnabled(false);
+
+    }
   }
 
-  const Logout = () => {
-    //Do logout here
-    console.log('Logout pressed')
+  const handleLogout = async () => {
+    
+    try {
+      await AsyncStorage.removeItem('user-session')
+    } catch(error) {
+      console.error('Error fetching data:', error);
+    }
+    
+    navigation.navigate('Auth')
   }
 
   return (
@@ -43,7 +113,7 @@ export default function ProfileScreen() {
       <ImageBackground style={styles.container} source={require('../assets/BG2.png')} resizeMode='stretch'>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : null} keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : null} style={styles.container}>
         <ScrollView >
-          <View style={{flex: 1, paddingTop: 50}}>
+          <View style={{flex: 1, paddingTop: 50}}> 
         
           <View style={{alignSelf: 'center'}}>
             <FontAwesome5 name='user-circle' size = {120} color = {Colors.white}/>
@@ -56,7 +126,7 @@ export default function ProfileScreen() {
           <View style={{...styles.inputContainer, flex: 1}}>
             <TextInput selectionColor={Colors.text_color} 
               multiline={false} style={styles.inputBox}
-              value = {inputName} editable = {true}
+              value = {inputName} editable = {isTextBoxEnabled}
               onChangeText={(text)=>handleChange({input: text, type: 'name'})}
             />
           </View>
@@ -68,7 +138,7 @@ export default function ProfileScreen() {
           <View style={{...styles.inputContainer, flex: 1}}>
             <TextInput selectionColor={Colors.text_color} 
               multiline={false} style={styles.inputBox}
-              value = {inputAge} editable = {true}
+              value = {inputAge} editable = {isTextBoxEnabled}
               onChangeText={(text)=>handleChange({input: text, type: 'age'})}/>
           </View>
 
@@ -79,7 +149,7 @@ export default function ProfileScreen() {
           <View style={{...styles.inputContainer, flex: 1}}>
             <TextInput selectionColor={Colors.text_color} 
               multiline={false} style={styles.inputBox}
-              value = {inputContact} editable = {true}
+              value = {inputContact} editable = {isTextBoxEnabled}
               onChangeText={(text)=>handleChange({input: text, type: 'contact'})}/>
           </View>
 
@@ -90,7 +160,7 @@ export default function ProfileScreen() {
           <View style={{...styles.inputContainer, flex: 1}}>
             <TextInput selectionColor={Colors.text_color} 
               multiline={false} style={styles.inputBox}
-              value = {inputEmail} editable = {true}
+              value = {inputEmail} editable = {isTextBoxEnabled}
               onChangeText={(text)=>handleChange({input: text, type: 'email'})}/>
           </View>
 
@@ -101,17 +171,17 @@ export default function ProfileScreen() {
           <View style={{...styles.inputContainer, flex: 1}}>
             <TextInput selectionColor={Colors.text_color} 
               multiline={false} style={styles.inputBox}
-              value = {inputAddress} editable = {true}
+              value = {inputAddress} editable = {isTextBoxEnabled}
               onChangeText={(text)=>handleChange({input: text, type: 'address'})}/>
           </View>
 
           <View style={{flexDirection: 'row', width: '90%', 
                         alignSelf: 'center', gap: 20, justifyContent: 'space-evenly'}}>
-            <TouchableOpacity style={styles.btn}onPress={()=>{EnableEdit()}}>
-              <Text style={styles.textStyle}>Edit Profile</Text>
+            <TouchableOpacity style={styles.btn} onPress={()=>{handleEdit()}}>
+              <Text style={styles.textStyle}> {isTextBoxEnabled ? 'Save Changes' : 'Edit Profile' } </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.btn} onPress={()=>{Logout()}}>
+            <TouchableOpacity style={styles.btn} onPress={()=>{handleLogout()}}>
               <Text style={styles.textStyle}>Logout</Text>
             </TouchableOpacity>
           </View>
